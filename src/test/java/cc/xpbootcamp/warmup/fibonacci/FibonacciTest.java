@@ -25,4 +25,9 @@ class FibonacciTest {
         Assertions.assertEquals(1, Fibonacci.byPos(2));
     }
 
+    @Test
+    void should_return_2_when_calculate_given_position_is_3() {
+        Assertions.assertEquals(2, Fibonacci.byPos(3));
+    }
+
 }
