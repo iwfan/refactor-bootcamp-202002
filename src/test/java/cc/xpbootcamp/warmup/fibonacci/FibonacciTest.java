@@ -48,9 +48,9 @@ class FibonacciTest {
     }
 
     @Test
-    void should_throw_error_when_calculate_given_position_is_50() {
+    void should_throw_error_when_calculate_given_position_is_51() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Fibonacci.byPos(50);
+            Fibonacci.byPos(51);
         });
     }
 
