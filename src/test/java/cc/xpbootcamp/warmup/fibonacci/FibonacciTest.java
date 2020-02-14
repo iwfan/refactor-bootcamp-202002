@@ -10,8 +10,8 @@ class FibonacciTest {
      *      + test position 1
      *      + test position 2
      *      + test position 3
-     *      - test position 25
-     *      - test position 50
+     *      + test position 25
+     *      + test position 50
      *      - test position < 1, > 50
      */
 
@@ -33,6 +33,11 @@ class FibonacciTest {
     @Test
     void should_return_75025_when_calculate_given_position_is_25() {
         Assertions.assertEquals(75025, Fibonacci.byPos(25));
+    }
+
+    @Test
+    void should_return_12586269025_when_calculate_given_position_is_50() {
+        Assertions.assertEquals(12586269025L, Fibonacci.byPos(50));
     }
 
 }
