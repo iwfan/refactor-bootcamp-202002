@@ -9,7 +9,7 @@ class FibonacciTest {
      *  Todo:
      *      + test position 1
      *      + test position 2
-     *      - test position 3
+     *      + test position 3
      *      - test position 25
      *      - test position 50
      *      - test position < 1, > 50
@@ -28,6 +28,11 @@ class FibonacciTest {
     @Test
     void should_return_2_when_calculate_given_position_is_3() {
         Assertions.assertEquals(2, Fibonacci.byPos(3));
+    }
+
+    @Test
+    void should_return_75025_when_calculate_given_position_is_25() {
+        Assertions.assertEquals(75025, Fibonacci.byPos(25));
     }
 
 }
