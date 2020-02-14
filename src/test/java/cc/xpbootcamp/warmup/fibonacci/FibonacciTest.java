@@ -7,8 +7,8 @@ class FibonacciTest {
     /**
      * 斐波那契数列： 1， 1， 2， 3， 5， 8 ... 12586269025L(50)
      *  Todo:
-     *      - test position 1
-     *      - test position 2
+     *      + test position 1
+     *      + test position 2
      *      - test position 3
      *      - test position 25
      *      - test position 50
@@ -17,7 +17,12 @@ class FibonacciTest {
 
     @Test
     void should_return_1_when_calculate_given_position_is_1() {
-        Assertions.assertEquals(1l, Fibonacci.byPos(1));
+        Assertions.assertEquals(1, Fibonacci.byPos(1));
+    }
+
+    @Test
+    void should_return_1_when_calculate_given_position_is_2() {
+        Assertions.assertEquals(1, Fibonacci.byPos(2));
     }
 
 }
