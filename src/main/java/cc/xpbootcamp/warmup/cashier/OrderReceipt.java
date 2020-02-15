@@ -16,16 +16,13 @@ public class OrderReceipt {
 
     public String printReceipt() {
         StringBuilder output = new StringBuilder();
+        printReceiptHeaders(output);
+        printCustomerInfo(output);
+        printLineItemsInfo(output);
+        return output.toString();
+    }
 
-        // print headers
-        output.append("======Printing Orders======\n");
-
-        // print date, bill no, customer name
-//        output.append("Date - " + order.getDate();
-        output.append(order.getCustomerName());
-        output.append(order.getCustomerAddress());
-//        output.append(order.getCustomerLoyaltyNumber());
-
+    private void printLineItemsInfo(StringBuilder output) {
         // prints lineItems
         double totalSalesTax = 0d;
         double total = 0d;
@@ -52,6 +49,14 @@ public class OrderReceipt {
 
         // print total amount
         output.append("Total Amount").append('\t').append(total);
-        return output.toString();
+    }
+
+    private void printCustomerInfo(StringBuilder output) {
+        output.append(order.getCustomerName());
+        output.append(order.getCustomerAddress());
+    }
+
+    private void printReceiptHeaders(StringBuilder output) {
+        output.append("======Printing Orders======\n");
     }
 }
