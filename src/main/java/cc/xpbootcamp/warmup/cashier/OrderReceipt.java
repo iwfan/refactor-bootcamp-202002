@@ -9,9 +9,25 @@ package cc.xpbootcamp.warmup.cashier;
  */
 public class OrderReceipt {
     private Order order;
+    private final double TAX_RATE = .10;
 
     public OrderReceipt(Order order) {
         this.order = order;
+    }
+
+    private double getTotalPrice() {
+        return order.getLineItems()
+                .stream()
+                .map(item -> item.totalPrice())
+                .reduce(.0, Double::sum);
+    }
+
+    private double getStateTax() {
+        return getTotalPrice() * TAX_RATE;
+    }
+
+    private double getTotalAmount() {
+        return getTotalPrice() + getStateTax();
     }
 
     public String printReceipt() {
@@ -19,13 +35,12 @@ public class OrderReceipt {
         printReceiptHeaders(output);
         printCustomerInfo(output);
         printLineItemsInfo(output);
+        printStateTax(output, getStateTax());
+        printTotalPrice(output, getTotalAmount());
         return output.toString();
     }
 
     private void printLineItemsInfo(StringBuilder output) {
-        // prints lineItems
-        double totalSalesTax = 0d;
-        double total = 0d;
         for (LineItem lineItem : order.getLineItems()) {
             output.append(lineItem.getDescription());
             output.append('\t');
@@ -33,22 +48,19 @@ public class OrderReceipt {
             output.append('\t');
             output.append(lineItem.getQuantity());
             output.append('\t');
-            output.append(lineItem.totalAmount());
+            output.append(lineItem.totalPrice());
             output.append('\n');
-
-            // calculate sales tax @ rate of 10%
-            double salesTax = lineItem.totalAmount() * .10;
-            totalSalesTax += salesTax;
-
-            // calculate total amount of lineItem = price * quantity + 10 % sales tax
-            total += lineItem.totalAmount() + salesTax;
         }
+    }
 
-        // prints the state tax
-        output.append("Sales Tax").append('\t').append(totalSalesTax);
-
+    private void printTotalPrice(StringBuilder output, double total) {
         // print total amount
         output.append("Total Amount").append('\t').append(total);
+    }
+
+    private void printStateTax(StringBuilder output, double totalSalesTax) {
+        // prints the state tax
+        output.append("Sales Tax").append('\t').append(totalSalesTax);
     }
 
     private void printCustomerInfo(StringBuilder output) {
