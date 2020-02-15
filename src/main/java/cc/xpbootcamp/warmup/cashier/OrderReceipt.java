@@ -18,7 +18,7 @@ public class OrderReceipt {
     private double getTotalPrice() {
         return order.getLineItems()
                 .stream()
-                .map(item -> item.totalPrice())
+                .map(LineItem::totalPrice)
                 .reduce(.0, Double::sum);
     }
 
@@ -30,45 +30,48 @@ public class OrderReceipt {
         return getTotalPrice() + getStateTax();
     }
 
-    public String printReceipt() {
+    private String getReceiptHeaders() {
+        return "======Printing Orders======\n";
+    }
+
+    private String getCustomerInfo() {
+        return order.getCustomerName() + order.getCustomerAddress();
+    }
+
+    private String getLineItemsInfo() {
+        StringBuilder result = new StringBuilder();
+        for (LineItem lineItem : order.getLineItems()) {
+            result.append(lineItem.getDescription());
+            result.append('\t');
+            result.append(lineItem.getPrice());
+            result.append('\t');
+            result.append(lineItem.getQuantity());
+            result.append('\t');
+            result.append(lineItem.totalPrice());
+            result.append('\n');
+        }
+        return result.toString();
+    }
+
+    private String getStateTaxPrintInfo() {
+        return String.format("Sales Tax\t%f", getStateTax());
+    }
+
+    private String getTotalAmountPrintInfo() {
+        return String.format("Total Amount\t%f", getTotalAmount());
+    }
+
+    private String getReceiptInfo() {
         StringBuilder output = new StringBuilder();
-        printReceiptHeaders(output);
-        printCustomerInfo(output);
-        printLineItemsInfo(output);
-        printStateTax(output, getStateTax());
-        printTotalPrice(output, getTotalAmount());
+        output.append(getReceiptHeaders());
+        output.append(getCustomerInfo());
+        output.append(getLineItemsInfo());
+        output.append(getStateTaxPrintInfo());
+        output.append(getTotalAmountPrintInfo());
         return output.toString();
     }
 
-    private void printLineItemsInfo(StringBuilder output) {
-        for (LineItem lineItem : order.getLineItems()) {
-            output.append(lineItem.getDescription());
-            output.append('\t');
-            output.append(lineItem.getPrice());
-            output.append('\t');
-            output.append(lineItem.getQuantity());
-            output.append('\t');
-            output.append(lineItem.totalPrice());
-            output.append('\n');
-        }
-    }
-
-    private void printTotalPrice(StringBuilder output, double total) {
-        // print total amount
-        output.append("Total Amount").append('\t').append(total);
-    }
-
-    private void printStateTax(StringBuilder output, double totalSalesTax) {
-        // prints the state tax
-        output.append("Sales Tax").append('\t').append(totalSalesTax);
-    }
-
-    private void printCustomerInfo(StringBuilder output) {
-        output.append(order.getCustomerName());
-        output.append(order.getCustomerAddress());
-    }
-
-    private void printReceiptHeaders(StringBuilder output) {
-        output.append("======Printing Orders======\n");
+    public String printReceipt() {
+        return getReceiptInfo();
     }
 }
