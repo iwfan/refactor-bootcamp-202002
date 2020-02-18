@@ -37,19 +37,15 @@ public class OrderReceipt {
         return "===== 老王超市，值得信赖 ======\n\n";
     }
 
-    private String getCustomerInfo() {
-        return order.getCustomerName() + order.getCustomerAddress();
-    }
-
     private String getLineItemsInfo() {
         StringBuilder result = new StringBuilder();
         for (LineItem lineItem : order.getLineItems()) {
             result.append(lineItem.getDescription());
-            result.append('\t');
+            result.append(", ");
             result.append(lineItem.getPrice());
-            result.append('\t');
+            result.append(" x ");
             result.append(lineItem.getQuantity());
-            result.append('\t');
+            result.append(", ");
             result.append(lineItem.totalPrice());
             result.append('\n');
         }
@@ -57,22 +53,26 @@ public class OrderReceipt {
     }
 
     private String getStateTaxPrintInfo() {
-        return String.format("Sales Tax\t%f", getStateTax());
+        return String.format("税额: %f", getStateTax());
     }
 
     private String getTotalAmountPrintInfo() {
-        return String.format("Total Amount\t%f", getTotalAmount());
+        return String.format("总价: %f", getTotalAmount());
     }
 
     private String getReceiptInfo() {
         StringBuilder output = new StringBuilder();
         output.append(getReceiptSlogan());
         output.append(getOrderTimeInfo());
-        output.append(getCustomerInfo());
         output.append(getLineItemsInfo());
+        output.append(getSplitLine());
         output.append(getStateTaxPrintInfo());
         output.append(getTotalAmountPrintInfo());
         return output.toString();
+    }
+
+    private String getSplitLine() {
+        return "-----------------------------------";
     }
 
     private String getOrderTimeInfo() {
