@@ -1,11 +1,14 @@
 package cc.xpbootcamp.warmup.cashier;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 /**
  * OrderReceipt prints the details of order including customer name, address, description, quantity,
  * price and amount. It also calculates the sales tax @ 10% and prints as part
  * of order. It computes the total order amount (amount of individual lineItems +
  * total sales tax) and prints it.
- *
  */
 public class OrderReceipt {
     private Order order;
@@ -30,8 +33,8 @@ public class OrderReceipt {
         return getTotalPrice() + getStateTax();
     }
 
-    private String getReceiptHeaders() {
-        return "======Printing Orders======\n";
+    private String getReceiptSlogan() {
+        return "===== 老王超市，值得信赖 ======\n\n";
     }
 
     private String getCustomerInfo() {
@@ -63,12 +66,24 @@ public class OrderReceipt {
 
     private String getReceiptInfo() {
         StringBuilder output = new StringBuilder();
-        output.append(getReceiptHeaders());
+        output.append(getReceiptSlogan());
+        output.append(getOrderTimeInfo());
         output.append(getCustomerInfo());
         output.append(getLineItemsInfo());
         output.append(getStateTaxPrintInfo());
         output.append(getTotalAmountPrintInfo());
         return output.toString();
+    }
+
+    private String getOrderTimeInfo() {
+        String[] weekNames = {"日", "一", "二", "三", "四", "五", "六"};
+        Date date = order.getTime();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int year = localDate.getYear();
+        int month = localDate.getMonth().getValue();
+        int day = localDate.getDayOfMonth();
+        int week = localDate.getDayOfWeek().getValue();
+        return String.format("%d年%d月%d日，星期%s\n\n", year, month, day, weekNames[week]);
     }
 
     public String printReceipt() {
