@@ -30,7 +30,12 @@ public class OrderReceipt {
     }
 
     private double getTotalAmount() {
-        return getTotalPrice() + getStateTax();
+        double amount = getTotalPrice() + getStateTax();
+        return isDiscount() ? amount - getDiscount() : amount;
+    }
+
+    private double getDiscount() {
+        return getTotalPrice() * (1.0 - .98);
     }
 
     private String getReceiptSlogan() {
@@ -53,11 +58,11 @@ public class OrderReceipt {
     }
 
     private String getStateTaxPrintInfo() {
-        return String.format("税额: %f", getStateTax());
+        return String.format("税额: %f\n", getStateTax());
     }
 
     private String getTotalAmountPrintInfo() {
-        return String.format("总价: %f", getTotalAmount());
+        return String.format("总价: %f\n", getTotalAmount());
     }
 
     private String getReceiptInfo() {
@@ -67,23 +72,39 @@ public class OrderReceipt {
         output.append(getLineItemsInfo());
         output.append(getSplitLine());
         output.append(getStateTaxPrintInfo());
+        if (isDiscount()) {
+            output.append("折扣: " + getDiscount() + "\n");
+        }
         output.append(getTotalAmountPrintInfo());
         return output.toString();
     }
 
     private String getSplitLine() {
-        return "-----------------------------------";
+        return "-----------------------------------\n";
     }
 
     private String getOrderTimeInfo() {
         String[] weekNames = {"日", "一", "二", "三", "四", "五", "六"};
-        Date date = order.getTime();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate = getOrderDate();
         int year = localDate.getYear();
         int month = localDate.getMonth().getValue();
         int day = localDate.getDayOfMonth();
         int week = localDate.getDayOfWeek().getValue();
         return String.format("%d年%d月%d日，星期%s\n\n", year, month, day, weekNames[week]);
+    }
+
+    private LocalDate getOrderDate() {
+        Date date = order.getDate();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    private boolean isDiscount() {
+        return isWednesday();
+    }
+
+    private boolean isWednesday() {
+        LocalDate localDate = getOrderDate();
+        return localDate.getDayOfWeek().getValue() == 3;
     }
 
     public String printReceipt() {

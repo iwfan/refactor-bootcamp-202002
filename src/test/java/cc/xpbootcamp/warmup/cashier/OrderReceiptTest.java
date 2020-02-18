@@ -1,8 +1,13 @@
 package cc.xpbootcamp.warmup.cashier;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,10 +23,9 @@ class OrderReceiptTest {
      * 3. print tax and total amount
      * 4. print discount on wednesday
      */
-
     @Test
     void should_print_slogan_and_date_on_order() {
-        Order order = new Order("Mr X", "Chicago, 60601", new ArrayList<LineItem>());
+        Order order = new Order("Mr X", "Chicago, 60601", new ArrayList<LineItem>(), new Date());
         OrderReceipt receipt = new OrderReceipt(order);
         String output = receipt.printReceipt();
 
@@ -30,7 +34,7 @@ class OrderReceiptTest {
         String regexp = "\\d{4}年\\d{1,2}月\\d{1,2}日，星期.";
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(output);
-
+        System.out.println(output);
         assertThat(matcher.find(), is(true));
     }
 
@@ -41,7 +45,8 @@ class OrderReceiptTest {
             add(new LineItem("biscuits", 5.0, 5));
             add(new LineItem("chocolate", 20.0, 1));
         }};
-        OrderReceipt receipt = new OrderReceipt(new Order(null, null, lineItems));
+
+        OrderReceipt receipt = new OrderReceipt(new Order(null, null, lineItems, new Date()));
 
         String output = receipt.printReceipt();
 
@@ -50,6 +55,22 @@ class OrderReceiptTest {
         assertThat(output, containsString("chocolate, 20.0 x 1, 20.0\n"));
         assertThat(output, containsString("税额: 6.5"));
         assertThat(output, containsString("总价: 71.5"));
+    }
+
+    @Test
+    public void shouldPrintDiscountInformationOnWednesday() throws ParseException {
+        List<LineItem> lineItems = new ArrayList<LineItem>() {{
+            add(new LineItem("milk", 10.0, 2));
+        }};
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date NOW = sdf.parse("2020-02-19 00:00:00");
+        OrderReceipt receipt = new OrderReceipt(new Order(null, null, lineItems, NOW));
+
+        String output = receipt.printReceipt();
+
+        assertThat(output, containsString("milk, 10.0 x 2, 20.0\n"));
+        assertThat(output, containsString("折扣: 0.4"));
     }
 
 }

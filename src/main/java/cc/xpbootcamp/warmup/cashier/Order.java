@@ -7,13 +7,13 @@ public class Order {
     protected String customerName;
     protected String address;
     protected List<LineItem> lineItemList;
-    protected Date time;
+    protected Date date;
 
-    public Order(String customerName, String address, List<LineItem> lineItemList) {
+    public Order(String customerName, String address, List<LineItem> lineItemList, Date date) {
         this.customerName = customerName;
         this.address = address;
         this.lineItemList = lineItemList;
-        this.time = new Date();
+        this.date = date;
     }
 
     public String getCustomerName() {
@@ -28,7 +28,7 @@ public class Order {
         return lineItemList;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getDate() {
+        return date;
     }
 }
