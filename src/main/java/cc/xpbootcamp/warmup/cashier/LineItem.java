@@ -23,7 +23,11 @@ public class LineItem {
 		return quantity;
 	}
 
-    double totalPrice() {
+    public double getTotalPrice() {
         return getPrice() * getQuantity();
     }
+
+	public String getFormattedLineItemInfo(String formatterPattern) {
+		return String.format(formatterPattern, getDescription(), getPrice(), getQuantity(), getTotalPrice());
+	}
 }

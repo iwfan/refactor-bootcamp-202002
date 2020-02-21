@@ -12,30 +12,9 @@ import java.util.Date;
  */
 public class OrderReceipt {
     private Order order;
-    private final double TAX_RATE = .10;
 
     public OrderReceipt(Order order) {
         this.order = order;
-    }
-
-    private double getTotalPrice() {
-        return order.getLineItems()
-                .stream()
-                .map(LineItem::totalPrice)
-                .reduce(.0, Double::sum);
-    }
-
-    private double getStateTax() {
-        return getTotalPrice() * TAX_RATE;
-    }
-
-    private double getTotalAmount() {
-        double amount = getTotalPrice() + getStateTax();
-        return isDiscount() ? amount - getDiscount() : amount;
-    }
-
-    private double getDiscount() {
-        return getTotalPrice() * (1.0 - .98);
     }
 
     private String getReceiptSlogan() {
@@ -51,18 +30,18 @@ public class OrderReceipt {
             result.append(" x ");
             result.append(lineItem.getQuantity());
             result.append(", ");
-            result.append(lineItem.totalPrice());
+            result.append(lineItem.getTotalPrice());
             result.append('\n');
         }
         return result.toString();
     }
 
     private String getStateTaxPrintInfo() {
-        return String.format("税额: %f\n", getStateTax());
+        return String.format("税额: %f\n", order.getStateTax());
     }
 
     private String getTotalAmountPrintInfo() {
-        return String.format("总价: %f\n", getTotalAmount());
+        return String.format("总价: %f\n", order.getTotalAmount());
     }
 
     private String getReceiptInfo() {
@@ -72,8 +51,8 @@ public class OrderReceipt {
         output.append(getLineItemsInfo());
         output.append(getSplitLine());
         output.append(getStateTaxPrintInfo());
-        if (isDiscount()) {
-            output.append("折扣: " + getDiscount() + "\n");
+        if (order.isDiscount()) {
+            output.append("折扣: " + order.getDiscount() + "\n");
         }
         output.append(getTotalAmountPrintInfo());
         return output.toString();
@@ -85,7 +64,7 @@ public class OrderReceipt {
 
     private String getOrderTimeInfo() {
         String[] weekNames = {"日", "一", "二", "三", "四", "五", "六"};
-        LocalDate localDate = getOrderDate();
+        LocalDate localDate = order.getOrderDate();
         int year = localDate.getYear();
         int month = localDate.getMonth().getValue();
         int day = localDate.getDayOfMonth();
@@ -93,21 +72,11 @@ public class OrderReceipt {
         return String.format("%d年%d月%d日，星期%s\n\n", year, month, day, weekNames[week]);
     }
 
-    private LocalDate getOrderDate() {
-        Date date = order.getDate();
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
-    private boolean isDiscount() {
-        return isWednesday();
-    }
-
-    private boolean isWednesday() {
-        LocalDate localDate = getOrderDate();
-        return localDate.getDayOfWeek().getValue() == 3;
-    }
-
     public String printReceipt() {
         return getReceiptInfo();
+    }
+
+    private String getReceiptTemplate() {
+        return "===== 老王超市，值得信赖 ======\n\n";
     }
 }

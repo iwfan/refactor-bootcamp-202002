@@ -1,8 +1,6 @@
-package cc.xpbootcamp.warmup.cashier;
 
-import org.junit.Before;
+package cc.xpbootcamp.warmup.cashier;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,12 +15,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 class OrderReceiptTest {
-    /**
-     * 1. testing print slogan and date
-     * 2. print line item with name / price / count / amount
-     * 3. print tax and total amount
-     * 4. print discount on wednesday
-     */
+
     @Test
     void should_print_slogan_and_date_on_order() {
         Order order = new Order("Mr X", "Chicago, 60601", new ArrayList<LineItem>(), new Date());
@@ -39,14 +32,14 @@ class OrderReceiptTest {
     }
 
     @Test
-    public void shouldPrintLineItemAndSalesTaxInformation() {
+    public void should_print_line_item_and_sales_tax_information() {
         List<LineItem> lineItems = new ArrayList<LineItem>() {{
             add(new LineItem("milk", 10.0, 2));
             add(new LineItem("biscuits", 5.0, 5));
             add(new LineItem("chocolate", 20.0, 1));
         }};
 
-        OrderReceipt receipt = new OrderReceipt(new Order(null, null, lineItems, new Date()));
+        OrderReceipt receipt = new OrderReceipt(new Order(lineItems));
 
         String output = receipt.printReceipt();
 
@@ -58,7 +51,7 @@ class OrderReceiptTest {
     }
 
     @Test
-    public void shouldPrintDiscountInformationOnWednesday() throws ParseException {
+    public void should_print_discount_information_on_wednesday() throws ParseException {
         List<LineItem> lineItems = new ArrayList<LineItem>() {{
             add(new LineItem("milk", 10.0, 2));
         }};
