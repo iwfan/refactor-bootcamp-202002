@@ -1,4 +1,3 @@
-
 package cc.xpbootcamp.warmup.cashier;
 import org.junit.jupiter.api.Test;
 
@@ -43,9 +42,9 @@ class OrderReceiptTest {
 
         String output = receipt.printReceipt();
 
-        assertThat(output, containsString("milk, 10.0 x 2, 20.0\n"));
-        assertThat(output, containsString("biscuits, 5.0 x 5, 25.0\n"));
-        assertThat(output, containsString("chocolate, 20.0 x 1, 20.0\n"));
+        assertThat(output, containsString("milk, 10.00 x 2, 20.00\n"));
+        assertThat(output, containsString("biscuits, 5.00 x 5, 25.00\n"));
+        assertThat(output, containsString("chocolate, 20.00 x 1, 20.00\n"));
         assertThat(output, containsString("税额: 6.5"));
         assertThat(output, containsString("总价: 71.5"));
     }
@@ -53,16 +52,16 @@ class OrderReceiptTest {
     @Test
     public void should_print_discount_information_on_wednesday() throws ParseException {
         List<LineItem> lineItems = new ArrayList<LineItem>() {{
-            add(new LineItem("milk", 10.0, 2));
+            add(new LineItem("milk", 10.00, 2));
         }};
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date NOW = sdf.parse("2020-02-19 00:00:00");
-        OrderReceipt receipt = new OrderReceipt(new Order(null, null, lineItems, NOW));
+        OrderReceipt receipt = new OrderReceipt(new Order(lineItems, NOW));
 
         String output = receipt.printReceipt();
 
-        assertThat(output, containsString("milk, 10.0 x 2, 20.0\n"));
+        assertThat(output, containsString("milk, 10.00 x 2, 20.00\n"));
         assertThat(output, containsString("折扣: 0.4"));
     }
 

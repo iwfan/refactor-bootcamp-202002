@@ -1,7 +1,6 @@
 package cc.xpbootcamp.warmup.cashier;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -13,9 +12,15 @@ public class Order {
 
     private static final double TAX_RATE = .10;
     private static final double DISCOUNT_RATE = .02;
+    private static final String DAY_NUMBER_OF_WEEK = "u";
+    private static final String WEDNESDAY = "3";
 
     public Order(List<LineItem> lineItemList) {
         this(null, null, lineItemList);
+    }
+
+    public Order(List<LineItem> lineItemList, Date date) {
+        this(null, null, lineItemList, date);
     }
 
     public Order(String customerName, String address, List<LineItem> lineItemList) {
@@ -65,17 +70,11 @@ public class Order {
         return getTotalPrice() * DISCOUNT_RATE;
     }
 
-    public LocalDate getOrderDate() {
-        Date date = getDate();
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
     public boolean isDiscount() {
         return isWednesday();
     }
 
     public boolean isWednesday() {
-        LocalDate localDate = getOrderDate();
-        return localDate.getDayOfWeek().getValue() == 3;
+        return new SimpleDateFormat(DAY_NUMBER_OF_WEEK).format(getDate()).equals(WEDNESDAY);
     }
 }

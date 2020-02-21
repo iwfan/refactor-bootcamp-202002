@@ -1,8 +1,7 @@
 package cc.xpbootcamp.warmup.cashier;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * OrderReceipt prints the details of order including customer name, address, description, quantity,
@@ -17,31 +16,8 @@ public class OrderReceipt {
         this.order = order;
     }
 
-    private String getReceiptSlogan() {
-        return "===== 老王超市，值得信赖 ======\n\n";
-    }
-
-    private String getLineItemsInfo() {
-        StringBuilder result = new StringBuilder();
-        for (LineItem lineItem : order.getLineItems()) {
-            result.append(lineItem.getDescription());
-            result.append(", ");
-            result.append(lineItem.getPrice());
-            result.append(" x ");
-            result.append(lineItem.getQuantity());
-            result.append(", ");
-            result.append(lineItem.getTotalPrice());
-            result.append('\n');
-        }
-        return result.toString();
-    }
-
-    private String getStateTaxPrintInfo() {
-        return String.format("税额: %f\n", order.getStateTax());
-    }
-
-    private String getTotalAmountPrintInfo() {
-        return String.format("总价: %f\n", order.getTotalAmount());
+    public String printReceipt() {
+        return getReceiptInfo();
     }
 
     private String getReceiptInfo() {
@@ -52,31 +28,44 @@ public class OrderReceipt {
         output.append(getSplitLine());
         output.append(getStateTaxPrintInfo());
         if (order.isDiscount()) {
-            output.append("折扣: " + order.getDiscount() + "\n");
+            output.append(getDiscountInfo());
         }
         output.append(getTotalAmountPrintInfo());
         return output.toString();
+    }
+
+    private String getReceiptSlogan() {
+        return "===== 老王超市，值得信赖 ======\n\n";
+    }
+
+    private String getOrderTimeInfo() {
+        return new SimpleDateFormat("yyyy年M月dd日，E\n\n", Locale.CHINA)
+                .format(order.getDate());
     }
 
     private String getSplitLine() {
         return "-----------------------------------\n";
     }
 
-    private String getOrderTimeInfo() {
-        String[] weekNames = {"日", "一", "二", "三", "四", "五", "六"};
-        LocalDate localDate = order.getOrderDate();
-        int year = localDate.getYear();
-        int month = localDate.getMonth().getValue();
-        int day = localDate.getDayOfMonth();
-        int week = localDate.getDayOfWeek().getValue();
-        return String.format("%d年%d月%d日，星期%s\n\n", year, month, day, weekNames[week]);
+    private String getLineItemsInfo() {
+        StringBuilder result = new StringBuilder();
+        String pattern = "%s, %.2f x %d, %.2f\n";
+        for (LineItem lineItem : order.getLineItems()) {
+            result.append(lineItem.getFormattedLineItemInfo(pattern));
+        }
+        return result.toString();
     }
 
-    public String printReceipt() {
-        return getReceiptInfo();
+    private String getDiscountInfo() {
+        return String.format("折扣: %.2f\n", order.getDiscount());
     }
 
-    private String getReceiptTemplate() {
-        return "===== 老王超市，值得信赖 ======\n\n";
+    private String getStateTaxPrintInfo() {
+        return String.format("税额: %.2f\n", order.getStateTax());
     }
+
+    private String getTotalAmountPrintInfo() {
+        return String.format("总价: %.2f\n", order.getTotalAmount());
+    }
+
 }
