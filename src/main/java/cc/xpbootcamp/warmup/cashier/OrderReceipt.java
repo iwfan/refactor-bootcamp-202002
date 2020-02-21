@@ -27,9 +27,7 @@ public class OrderReceipt {
         output.append(getLineItemsInfo());
         output.append(getSplitLine());
         output.append(getStateTaxPrintInfo());
-        if (order.isDiscount()) {
-            output.append(getDiscountInfo());
-        }
+        output.append(getDiscountInfo());
         output.append(getTotalAmountPrintInfo());
         return output.toString();
     }
@@ -57,7 +55,7 @@ public class OrderReceipt {
     }
 
     private String getDiscountInfo() {
-        return String.format("折扣: %.2f\n", order.getDiscount());
+        return order.isDiscount() ? String.format("折扣: %.2f\n", order.getDiscount()) : "";
     }
 
     private String getStateTaxPrintInfo() {
